@@ -13,23 +13,33 @@ import java.util.List;
 public class SpringDataBootApplication {
 
     public static void main(String[] args) {
-        
+
         ConfigurableApplicationContext ctx =
                 SpringApplication.run(SpringDataBootApplication.class, args);
 
         List<Car> cars = new ArrayList<>();
         cars.add(new Car("A4", "Audi", 49000.0));
+        cars.add(new Car("A5", "Audi", 67000.0));
         cars.add(new Car("Auris", "Toyota", 35000.0));
         cars.add(new Car("Insignia", "Opel", 29500.0));
+        cars.add(new Car("A8", "Audi", 28000.0));
+        cars.add(new Car("Corolla", "Toyota", 31000.0));
+        cars.add(new Car("Vectra", "Opel", 29500.0));
+        cars.add(new Car("Astra", "Opel", 29500.0));
 
-        CarRepository carRepo = ctx.getBean(CarRepository.class);
-        cars.forEach(carRepo::save); //zapisujemy samochody
+        CarRepository carRepository = ctx.getBean(CarRepository.class);
+        cars.forEach(carRepository::save);
 
-        Car firstCar = carRepo.findById(1L).get(); //pobieramy pierwszy
-        carRepo.delete(firstCar); //usuwamy go
+        //Findall
+        System.out.println("All toyota");
+        List<Car> allByBrand = carRepository.findAllByBrand("Toyota");
+        allByBrand.forEach(System.out::println);
 
-        //pobieramy i wyświetlamy pozostałe
-        carRepo.findAll().forEach(System.out::println);
+        //find first by
+        Car opel = carRepository.findFirstByBrand("Opel");
+        System.out.println(opel);
+
+
 
         ctx.close();
     }
